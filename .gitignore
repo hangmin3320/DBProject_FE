@@ -1,0 +1,126 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env*.local
+.env*.dev
+.env*.test
+.env*.prod
+
+# Next.js
+.next/
+out/
+
+# Next.js build output
+build/
+
+# Next.js debug
+.next/cache/
+
+# TypeScript
+*.tsbuildinfo
+*.log
+
+# Build outputs
+dist/
+.nyc_output/
+coverage/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# TypeScript v3/v4 output
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+
+# next-i18next
+public/locales/
+
+# next-auth
+next-auth.d.ts
+
+# Temporary folder for serverless deployment
+.serverless_nextjs/
+
+# Serverless folders
+.serverless/
+
+# Netlify
+netlify/
+
+# Prisma
+prisma/migrations/
+prisma/schema.prisma.backup
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Turbopack cache
+.node/node_modules/
+.node/.cache/
+
+# next build output
+.next/static/chunks/
+.next/static/webpack/
+.next/static/css/
+.next/static/media/
+.next/server/
+.next/cache/
+.next/build-manifest.json
+.next/prerender-manifest.json
+.next/react-loadable-manifest.json
+.next/required-server-files.json
+.next/server-reference-manifest.json
+.next/static-pages-manifest.json
+
+QWEN.md
