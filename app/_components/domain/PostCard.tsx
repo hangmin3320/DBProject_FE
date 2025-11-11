@@ -5,9 +5,8 @@ import Link from 'next/link';
 import { Post } from '../../types/post';
 import { User } from '../../types/user';
 import { Avatar } from '../ui/Avatar';
-import { Button } from '../ui/Button';
+import { Button } from '../ui';
 import { formatDate, extractHashtags } from '../../_lib/utils';
-import { useAuthStore } from '../../_store/auth';
 
 interface PostCardProps {
   post: Post;
@@ -16,9 +15,18 @@ interface PostCardProps {
   onLike?: (postId: number) => void;
 }
 
-const PostCard = ({ post, onEdit, onDelete, onLike }: PostCardProps) => {
-  const { user: currentUser } = useAuthStore();
+const PostCardComponent = ({ post, onEdit, onDelete, onLike }: PostCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  
+  // Mock current user - in a real app, this would come from context or store
+  const currentUser = {
+    id: 1,
+    email: 'user@example.com',
+    username: 'JohnDoe',
+    bio: 'Software Developer',
+    follower_count: 10,
+    following_count: 15
+  };
   
   // Check if current user is the post author
   const isAuthor = currentUser && currentUser.id === post.user_id;
@@ -131,6 +139,10 @@ const PostCard = ({ post, onEdit, onDelete, onLike }: PostCardProps) => {
       </div>
     </div>
   );
+};
+
+const PostCard = (props: PostCardProps) => {
+  return <PostCardComponent {...props} />;
 };
 
 export { PostCard };

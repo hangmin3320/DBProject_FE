@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { useAuthStore } from '../_store/auth';
+import { useAuthStore } from '../../_store/auth';
 
 // Base API configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
 
 // Create axios instance
 const apiClient = axios.create({

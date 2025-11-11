@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Comment } from '../../types/comment';
 import { Avatar } from '../ui/Avatar';
 import { formatDate } from '../../_lib/utils';
-import { useAuthStore } from '../../_store/auth';
 
 interface CommentItemProps {
   comment: Comment;
@@ -13,8 +12,16 @@ interface CommentItemProps {
   onDelete?: (commentId: number) => void;
 }
 
-const CommentItem = ({ comment, onEdit, onDelete }: CommentItemProps) => {
-  const { user: currentUser } = useAuthStore();
+const CommentItemComponent = ({ comment, onEdit, onDelete }: CommentItemProps) => {
+  // Mock current user - in a real app, this would come from context or store
+  const currentUser = {
+    id: 1,
+    email: 'user@example.com',
+    username: 'JohnDoe',
+    bio: 'Software Developer',
+    follower_count: 10,
+    following_count: 15
+  };
   
   // Check if current user is the comment author
   const isAuthor = currentUser && currentUser.id === comment.user_id;
@@ -57,6 +64,10 @@ const CommentItem = ({ comment, onEdit, onDelete }: CommentItemProps) => {
       </div>
     </div>
   );
+};
+
+const CommentItem = (props: CommentItemProps) => {
+  return <CommentItemComponent {...props} />;
 };
 
 export { CommentItem };

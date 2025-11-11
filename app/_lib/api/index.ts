@@ -1,5 +1,5 @@
 // API services index file
-export { userApi } from './api/user';
-export { postApi } from './api/post';
-export { commentApi } from './api/comment';
-export { default as apiClient } from './api/client';
+export { userApi } from './user';
+export { postApi } from './post';
+export { commentApi } from './comment';
+export { default as apiClient } from './client';
