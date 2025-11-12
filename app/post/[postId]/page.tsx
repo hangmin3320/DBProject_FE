@@ -8,6 +8,9 @@ import { Input, Button } from '../../_components/ui';
 import { Post } from '../../types/post';
 import { Comment } from '../../types/comment';
 import { User } from '../../types/user';
+import { postApi } from '../../_lib/api';
+import { commentApi } from '../../_lib/api';
+import { useAuthStore } from '../../_store/auth';
 
 export default function PostDetailPage() {
   const { postId } = useParams();
@@ -15,77 +18,18 @@ export default function PostDetailPage() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
-  
-  // Mock current user ID - in a real app, get from auth store
-  const currentUserId = 1;
+  const { user: currentUser } = useAuthStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Mock post data - in a real app, fetch from API
-        const mockPost: Post = {
-          post_id: Number(postId),
-          content: 'This is an example post with some detailed content to see how the post detail page looks like. It includes images, hashtags and can have multiple lines.',
-          user_id: 1,
-          user: {
-            user_id: 1,
-            email: 'user@example.com',
-            username: 'JohnDoe',
-            bio: 'Software Developer',
-            created_at: new Date().toISOString(),
-            follower_count: 10,
-            following_count: 15
-          },
-          created_at: new Date().toISOString(),
-          like_count: 5,
-          hashtags: [
-            { hashtag_id: 1, name: 'example' },
-            { hashtag_id: 2, name: 'detail' }
-          ],
-          images: [
-            { image_id: 1, image_url: 'https://via.placeholder.com/600x400.png?text=Post+Image' }
-          ]
-        };
-        
-        setPost(mockPost);
-        
-        // Mock comments for the post - in a real app, fetch from API
-        const mockComments: Comment[] = [
-          {
-            comment_id: 1,
-            content: 'Great post! Thanks for sharing.',
-            post_id: Number(postId),
-            user_id: 2,
-            user: {
-              user_id: 2,
-              email: 'commenter@example.com',
-              username: 'Commenter',
-              bio: 'Frequent commenter',
-              created_at: new Date().toISOString(),
-              follower_count: 5,
-              following_count: 8
-            },
-            created_at: new Date().toISOString()
-          },
-          {
-            comment_id: 2,
-            content: 'I really enjoyed reading this.',
-            post_id: Number(postId),
-            user_id: 3,
-            user: {
-              user_id: 3,
-              email: 'reader@example.com',
-              username: 'Reader',
-              bio: 'Active reader',
-              created_at: new Date().toISOString(),
-              follower_count: 12,
-              following_count: 7
-            },
-            created_at: new Date().toISOString()
-          }
-        ];
-        
-        setComments(mockComments);
+        // Fetch post data from API
+        const postData = await postApi.getPostById(Number(postId));
+        setPost(postData);
+
+        // Fetch comments for this post
+        const commentsData = await commentApi.getComments(Number(postId));
+        setComments(commentsData);
       } catch (error) {
         console.error('Error fetching post data:', error);
       } finally {
@@ -98,28 +42,19 @@ export default function PostDetailPage() {
     }
   }, [postId]);
 
-  const handleAddComment = () => {
-    if (newComment.trim() === '') return;
-    
-    const newCommentObj: Comment = {
-      comment_id: comments.length + 1, // Mock ID
-      content: newComment,
-      post_id: Number(postId),
-      user_id: currentUserId,
-      user: {
-        user_id: currentUserId,
-        email: 'currentuser@example.com',
-        username: 'CurrentUser',
-        bio: 'Current user',
-        created_at: new Date().toISOString(),
-        follower_count: 5,
-        following_count: 8
-      },
-      created_at: new Date().toISOString()
-    };
-    
-    setComments([...comments, newCommentObj]);
-    setNewComment('');
+  const handleAddComment = async () => {
+    if (newComment.trim() === '' || !currentUser) return;
+
+    try {
+      // Add comment via API
+      const newCommentData = await commentApi.createComment(Number(postId), newComment);
+      
+      // Add to local state
+      setComments([...comments, newCommentData]);
+      setNewComment('');
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
   };
 
   if (loading) {
@@ -138,32 +73,51 @@ export default function PostDetailPage() {
     );
   }
 
-  const handleDeletePost = (postId: number) => {
-    console.log('Deleting post:', postId);
-    // In a real app, implement actual deletion
+  const handleDeletePost = async (postId: number) => {
+    try {
+      await postApi.deletePost(postId);
+      // In a real app, you might redirect to home after deletion
+      console.log('Post deleted');
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
   };
 
-  const handleLikePost = (postId: number) => {
-    setPost({
-      ...post,
-      like_count: post.like_count + 1
-    });
+  const handleLikePost = async (postId: number) => {
+    try {
+      // In a real app, this would make an API call
+      // await postApi.likePost(postId);
+      
+      // For now, update the count optimistically
+      setPost({
+        ...post,
+        like_count: post.like_count + 1
+      });
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
   };
 
-  const handleDeleteComment = (commentId: number) => {
-    setComments(comments.filter(comment => comment.comment_id !== commentId));
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      await commentApi.deleteComment(commentId);
+      setComments(comments.filter(comment => comment.comment_id !== commentId));
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Post Detail */}
       <div className="max-w-2xl mx-auto py-6 px-4">
-        <PostCard 
-          post={post} 
+        <PostCard
+          post={post}
+          currentUser={currentUser || undefined}
           onDelete={handleDeletePost}
           onLike={handleLikePost}
         />
-        
+
         {/* Comment Form */}
         <div className="bg-white rounded-lg shadow p-6 mt-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Leave a comment</h3>
@@ -179,19 +133,20 @@ export default function PostDetailPage() {
             <Button onClick={handleAddComment}>등록</Button>
           </div>
         </div>
-        
+
         {/* Comments List */}
         <div className="bg-white rounded-lg shadow p-6 mt-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">
             Comments ({comments.length})
           </h3>
-          
+
           {comments.length > 0 ? (
             <div>
               {comments.map(comment => (
-                <CommentItem 
-                  key={comment.comment_id} 
-                  comment={comment} 
+                <CommentItem
+                  key={comment.comment_id}
+                  comment={comment}
+                  currentUser={currentUser || undefined}
                   onDelete={handleDeleteComment}
                 />
               ))}

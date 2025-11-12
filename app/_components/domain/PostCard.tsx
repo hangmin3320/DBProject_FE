@@ -10,26 +10,17 @@ import { formatDate, extractHashtags } from '../../_lib/utils';
 
 interface PostCardProps {
   post: Post;
+  currentUser?: User; // Pass current user as prop to avoid hook issues
   onEdit?: (post: Post) => void;
   onDelete?: (postId: number) => void;
   onLike?: (postId: number) => void;
 }
 
-const PostCardComponent = ({ post, onEdit, onDelete, onLike }: PostCardProps) => {
+const PostCard = ({ post, currentUser, onEdit, onDelete, onLike }: PostCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  // Mock current user - in a real app, this would come from context or store
-  const currentUser = {
-    id: 1,
-    email: 'user@example.com',
-    username: 'JohnDoe',
-    bio: 'Software Developer',
-    follower_count: 10,
-    following_count: 15
-  };
-  
   // Check if current user is the post author
-  const isAuthor = currentUser && currentUser.id === post.user_id;
+  const isAuthor = currentUser && currentUser.user_id === post.user_id;
   
   // Extract hashtags from content
   const hashtags = extractHashtags(post.content);
@@ -139,10 +130,6 @@ const PostCardComponent = ({ post, onEdit, onDelete, onLike }: PostCardProps) =>
       </div>
     </div>
   );
-};
-
-const PostCard = (props: PostCardProps) => {
-  return <PostCardComponent {...props} />;
 };
 
 export { PostCard };

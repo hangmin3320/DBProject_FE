@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useAuthStore } from '../../_store/auth';
 
 // Base API configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
@@ -13,13 +12,19 @@ const apiClient = axios.create({
   },
 });
 
+// Function to update the token in the axios instance
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete apiClient.defaults.headers.common['Authorization'];
+  }
+};
+
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // Token will be set via setAuthToken function when user logs in
     return config;
   },
   (error) => {
@@ -32,11 +37,9 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Clear auth state and redirect to login
-      useAuthStore.getState().logout();
       // In a real app, you would redirect to login page
       // For now, just log the event
-      console.log('Unauthorized access - token may have expired');
+      console.log('Unauthorized access - please log in to access this resource');
     }
     return Promise.reject(error);
   }

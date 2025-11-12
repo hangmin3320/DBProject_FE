@@ -3,28 +3,20 @@
 import React from 'react';
 import Link from 'next/link';
 import { Comment } from '../../types/comment';
+import { User } from '../../types/user';
 import { Avatar } from '../ui/Avatar';
 import { formatDate } from '../../_lib/utils';
 
 interface CommentItemProps {
   comment: Comment;
+  currentUser?: User; // Pass current user as prop to avoid hook issues
   onEdit?: (comment: Comment) => void;
   onDelete?: (commentId: number) => void;
 }
 
-const CommentItemComponent = ({ comment, onEdit, onDelete }: CommentItemProps) => {
-  // Mock current user - in a real app, this would come from context or store
-  const currentUser = {
-    id: 1,
-    email: 'user@example.com',
-    username: 'JohnDoe',
-    bio: 'Software Developer',
-    follower_count: 10,
-    following_count: 15
-  };
-  
+const CommentItem = ({ comment, currentUser, onEdit, onDelete }: CommentItemProps) => {
   // Check if current user is the comment author
-  const isAuthor = currentUser && currentUser.id === comment.user_id;
+  const isAuthor = currentUser && currentUser.user_id === comment.user_id;
 
   return (
     <div className="flex items-start py-3 border-b border-gray-100">
@@ -64,10 +56,6 @@ const CommentItemComponent = ({ comment, onEdit, onDelete }: CommentItemProps) =
       </div>
     </div>
   );
-};
-
-const CommentItem = (props: CommentItemProps) => {
-  return <CommentItemComponent {...props} />;
 };
 
 export { CommentItem };

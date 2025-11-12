@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '../../_store/auth';
@@ -12,6 +12,10 @@ const Navbar = () => {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    console.log('Navbar user state changed:', user);
+  }, [user]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +48,7 @@ const Navbar = () => {
               {user && (
                 <>
                   <Link 
-                    href={`/profile/${user.id}`} 
+                    href={`/profile/${user.user_id || user.id}`} 
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                       pathname.includes('/profile') 
                         ? 'border-blue-500 text-gray-900' 
@@ -86,7 +90,7 @@ const Navbar = () => {
               <div className="ml-4 flex items-center md:ml-6">
                 <div className="relative ml-3">
                   <div className="flex space-x-3 items-center">
-                    <Link href={`/profile/${user.id}`}>
+                    <Link href={`/profile/${user.user_id || user.id}`}>
                       <Avatar 
                         src="" 
                         fallback={user.username.charAt(0).toUpperCase()} 

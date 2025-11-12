@@ -2,10 +2,11 @@
 
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+import { setAuthToken } from '../_lib/api/client';
 
 interface AuthState {
   user: {
-    id: number;
+    user_id: number;
     email: string;
     username: string;
     bio: string;
@@ -19,24 +20,26 @@ interface AuthState {
   updateProfile: (userData: AuthState['user']) => void;
 }
 
-// SSR 안전한 스토어 생성
-const createStore = () =>
-  create<AuthState>()(
-    devtools(
-      persist(
-        (set) => ({
-          user: null,
-          token: null,
-          isAuthenticated: false,
-          login: (user, token) => set({ user, token, isAuthenticated: true }),
-          logout: () => set({ user: null, token: null, isAuthenticated: false }),
-          updateProfile: (user) => set({ user }),
-        }),
-        {
-          name: 'auth-storage', // unique name for localStorage
-        }
-      )
+export const useAuthStore = create<AuthState>()(
+  devtools(
+    persist(
+      (set) => ({
+        user: null,
+        token: null,
+        isAuthenticated: false,
+        login: (user, token) => {
+          setAuthToken(token);
+          return set({ user, token, isAuthenticated: true });
+        },
+        logout: () => {
+          setAuthToken(null);
+          return set({ user: null, token: null, isAuthenticated: false });
+        },
+        updateProfile: (user) => set({ user }),
+      }),
+      {
+        name: 'auth-storage', // unique name for localStorage
+      }
     )
-  );
-
-export const useAuthStore = createStore();
+  )
+);
