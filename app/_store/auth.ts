@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+import Cookies from 'js-cookie';
 import { setAuthToken } from '../_lib/api/client';
 
 interface AuthState {
@@ -13,7 +14,6 @@ interface AuthState {
     follower_count: number;
     following_count: number;
   } | null;
-  token: string | null;
   isAuthenticated: boolean;
   login: (userData: AuthState['user'], token: string) => void;
   logout: () => void;
@@ -25,15 +25,15 @@ export const useAuthStore = create<AuthState>()(
     persist(
       (set) => ({
         user: null,
-        token: null,
         isAuthenticated: false,
         login: (user, token) => {
           setAuthToken(token);
-          return set({ user, token, isAuthenticated: true });
+          return set({ user, isAuthenticated: true });
         },
         logout: () => {
+          Cookies.remove('access_token');
           setAuthToken(null);
-          return set({ user: null, token: null, isAuthenticated: false });
+          return set({ user: null, isAuthenticated: false });
         },
         updateProfile: (user) => set({ user }),
       }),

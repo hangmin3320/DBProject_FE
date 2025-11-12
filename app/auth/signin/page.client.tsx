@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 import { Input, Button } from '../../_components/ui';
 import { useAuthStore } from '../../_store/auth';
 import { userApi } from '../../_lib/api';
@@ -20,6 +21,9 @@ export default function SignInPageClient() {
     try {
       // API call to login
       const response = await userApi.login(email, password);
+      
+      // Set token in cookie
+      Cookies.set('access_token', response.access_token, { expires: 7, secure: true, sameSite: 'strict' });
 
       // Extract user data (in a real app, you would get this from the response or another API call)
       // For now, we'll use mock data, but in a real app you would fetch user details

@@ -2,28 +2,31 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // This function runs before each request
 export function middleware(request: NextRequest) {
-  // Define protected routes that require authentication
-  const protectedPaths = [
-    '/',
-    '/settings',
-    '/post',
-    '/profile'
+  const token = request.cookies.get('access_token');
+  const { pathname } = request.nextUrl;
+
+  // Define public paths that don't require authentication
+  const publicPaths = [
+    '/auth/signin',
+    '/auth/signup',
   ];
 
-  // Check if the current path is a protected route
-  const isProtectedRoute = protectedPaths.some(path => 
-    request.nextUrl.pathname === path || 
-    request.nextUrl.pathname.startsWith(`${path}/`)
-  );
+  // Check if the current path is public
+  const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
 
-  // For this implementation, we'll allow all access but in a real app, 
-  // you would check for a valid session/cookie here
-  if (isProtectedRoute) {
-    // In a real app, you would check for authentication tokens here
-    // If not authenticated, redirect to sign in page
-    // For now, just allowing access to demonstrate the UI
+  // If trying to access a public path, let them through
+  if (isPublicPath) {
+    return NextResponse.next();
   }
 
+  // If the token is missing and they are trying to access a protected route, redirect to signin
+  if (!token) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/auth/signin';
+    return NextResponse.redirect(url);
+  }
+
+  // If the token exists, let them proceed
   return NextResponse.next();
 }
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 // Base API configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
@@ -21,6 +22,12 @@ export const setAuthToken = (token: string | null) => {
   }
 };
 
+// Set the initial token from cookies when the app loads
+const initialToken = Cookies.get('access_token');
+if (initialToken) {
+  setAuthToken(initialToken);
+}
+
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
@@ -40,6 +47,9 @@ apiClient.interceptors.response.use(
       // In a real app, you would redirect to login page
       // For now, just log the event
       console.log('Unauthorized access - please log in to access this resource');
+      // Here we might also want to clear the cookie and zustand state
+      Cookies.remove('access_token');
+      // This part is tricky in a client module, might be better handled in a component
     }
     return Promise.reject(error);
   }
