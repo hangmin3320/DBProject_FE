@@ -14,10 +14,6 @@ const Navbar = () => {
   const { user, logout } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    console.log('Navbar user state changed:', user);
-  }, [user]);
-
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {

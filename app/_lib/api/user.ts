@@ -1,5 +1,6 @@
 import apiClient from './client';
 import { User, UserCreate, UserUpdate, PasswordUpdate } from '../types/user';
+import Cookies from 'js-cookie';
 
 // User API functions
 export const userApi = {

@@ -80,8 +80,6 @@ export default function PostDetailPage() {
   const handleDeletePost = async (postId: number) => {
     try {
       await postApi.deletePost(postId);
-      // In a real app, you might redirect to home after deletion
-      console.log('Post deleted');
     } catch (error) {
       console.error('Error deleting post:', error);
     }

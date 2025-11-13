@@ -27,8 +27,7 @@ const FollowButton = ({ userId, isFollowing, onFollowToggle }: FollowButtonProps
 
   const handleFollowToggle = async () => {
     if (!currentUser) {
-      // Not logged in, maybe redirect to sign in in a real app
-      console.log("Please sign in to follow users");
+      // Not logged in, maybe redirect to sign in in a real app or show a toast
       return;
     }
 

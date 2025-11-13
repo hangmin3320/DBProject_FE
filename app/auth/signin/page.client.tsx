@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { Input, Button } from '../../_components/ui';
 import { useAuthStore } from '../../_store/auth';
 import { userApi } from '../../_lib/api';
+import { setAuthToken } from '../../_lib/api/client'; // Import setAuthToken
 
 export default function SignInPageClient() {
   const [email, setEmail] = useState('');
@@ -24,6 +25,9 @@ export default function SignInPageClient() {
       
       // Set token in cookie
       Cookies.set('access_token', response.access_token, { expires: 7, secure: true, sameSite: 'strict' });
+
+      // Set the token in the API client for subsequent requests
+      setAuthToken(response.access_token);
 
       // Fetch current user's data
       const currentUser = await userApi.getMe();

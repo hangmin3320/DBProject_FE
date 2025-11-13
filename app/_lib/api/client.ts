@@ -28,10 +28,13 @@ if (initialToken) {
   setAuthToken(initialToken);
 }
 
-// Request interceptor to add auth token
+// Request interceptor to dynamically add the auth token from cookies to every request
 apiClient.interceptors.request.use(
   (config) => {
-    // Token will be set via setAuthToken function when user logs in
+    const token = Cookies.get('access_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -46,8 +49,6 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       // Check if we are already on the signin page to avoid redirect loops
       if (typeof window !== 'undefined' && window.location.pathname !== '/auth/signin') {
-        console.log('Unauthorized access. Redirecting to login page.');
-        
         // Clear any stale auth data
         Cookies.remove('access_token');
         // You might want to clear your auth store here as well
