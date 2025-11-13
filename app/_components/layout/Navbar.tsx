@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore } from '../../_store/auth';
 import { Avatar } from '../ui/Avatar';
 import { Input } from '../ui/Input';
@@ -10,6 +10,7 @@ import { Button } from '../ui/Button';
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const { user, logout } = useAuthStore();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -20,9 +21,7 @@ const Navbar = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // In a real app, this would navigate to the search results page
-      console.log('Searching for:', searchQuery);
-      // For now, we'll just log it
+      router.push(`/search?q=${searchQuery}`);
     }
   };
 

@@ -102,7 +102,7 @@ export default function ProfilePageClient() {
                   ) : (
                     <FollowButton 
                       userId={user.user_id} 
-                      isFollowing={false} // In a real app, determine from state
+                      isFollowing={user.is_following || false}
                     />
                   )}
                 </div>

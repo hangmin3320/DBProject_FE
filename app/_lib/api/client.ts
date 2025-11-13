@@ -44,12 +44,18 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // In a real app, you would redirect to login page
-      // For now, just log the event
-      console.log('Unauthorized access - please log in to access this resource');
-      // Here we might also want to clear the cookie and zustand state
-      Cookies.remove('access_token');
-      // This part is tricky in a client module, might be better handled in a component
+      // Check if we are already on the signin page to avoid redirect loops
+      if (typeof window !== 'undefined' && window.location.pathname !== '/auth/signin') {
+        console.log('Unauthorized access. Redirecting to login page.');
+        
+        // Clear any stale auth data
+        Cookies.remove('access_token');
+        // You might want to clear your auth store here as well
+        // useAuthStore.getState().logout(); // Be careful with calling store actions outside components
+        
+        // Redirect to login
+        window.location.href = '/auth/signin';
+      }
     }
     return Promise.reject(error);
   }

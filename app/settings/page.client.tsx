@@ -3,58 +3,78 @@
 import { useState } from 'react';
 import { Button, Input } from '../_components/ui';
 import { useAuthStore } from '../_store/auth';
-import { User } from '../types/user';
+import { userApi } from '../_lib/api';
 
 export default function SettingsPageClient() {
   const { user, updateProfile } = useAuthStore();
   const [activeTab, setActiveTab] = useState('profile'); // profile, password
+  
+  // Profile state
   const [username, setUsername] = useState(user?.username || '');
   const [bio, setBio] = useState(user?.bio || '');
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileMessage, setProfileMessage] = useState({ type: '', text: '' });
+
+  // Password state
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState({ type: '', text: '' });
 
-  const handleProfileUpdate = (e: React.FormEvent) => {
+  const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!user) return;
-    
-    // In a real app, make an API call to update the profile
-    const updatedUser: User = {
-      ...user,
-      username,
-      bio
-    };
-    
-    updateProfile(updatedUser);
-    setMessage('Profile updated successfully');
-    
-    // Clear message after 3 seconds
-    setTimeout(() => setMessage(''), 3000);
+
+    setProfileLoading(true);
+    setProfileMessage({ type: '', text: '' });
+
+    try {
+      const updatedUserData = await userApi.updateUser(user.user_id, { username, bio });
+      updateProfile(updatedUserData);
+      setProfileMessage({ type: 'success', text: 'Profile updated successfully' });
+    } catch (error) {
+      console.error('Profile update error:', error);
+      setProfileMessage({ type: 'error', text: 'Failed to update profile' });
+    } finally {
+      setProfileLoading(false);
+      setTimeout(() => setProfileMessage({ type: '', text: '' }), 3000);
+    }
   };
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    if (!user) return;
+
     if (newPassword !== confirmPassword) {
-      setMessage('New passwords do not match');
+      setPasswordMessage({ type: 'error', text: 'New passwords do not match' });
       return;
     }
-    
     if (newPassword.length < 8) {
-      setMessage('Password must be at least 8 characters long');
+      setPasswordMessage({ type: 'error', text: 'Password must be at least 8 characters long' });
       return;
     }
-    
-    // In a real app, make an API call to update the password
-    setMessage('Password updated successfully');
-    
-    // Clear form and message after 3 seconds
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-    setTimeout(() => setMessage(''), 3000);
+
+    setPasswordLoading(true);
+    setPasswordMessage({ type: '', text: '' });
+
+    try {
+      await userApi.updatePassword(user.user_id, {
+        old_password: currentPassword,
+        new_password: newPassword,
+      });
+      setPasswordMessage({ type: 'success', text: 'Password updated successfully' });
+      // Clear form
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      console.error('Password change error:', error);
+      setPasswordMessage({ type: 'error', text: 'Failed to change password. Check your current password.' });
+    } finally {
+      setPasswordLoading(false);
+      setTimeout(() => setPasswordMessage({ type: '', text: '' }), 3000);
+    }
   };
 
   return (
@@ -88,17 +108,16 @@ export default function SettingsPageClient() {
           </nav>
         </div>
         
-        {/* Message */}
-        {message && (
-          <div className="mb-6 rounded-md bg-green-50 p-4">
-            <div className="text-sm text-green-700">{message}</div>
-          </div>
-        )}
-        
         {/* Profile Update Form */}
         {activeTab === 'profile' && user && (
           <form onSubmit={handleProfileUpdate} className="bg-white shadow rounded-lg p-6">
             <h2 className="text-lg font-medium text-gray-900 mb-4">Profile Information</h2>
+            
+            {profileMessage.text && (
+              <div className={`mb-4 rounded-md p-4 ${profileMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                <div className="text-sm">{profileMessage.text}</div>
+              </div>
+            )}
             
             <div className="mb-4">
               <Input
@@ -106,6 +125,7 @@ export default function SettingsPageClient() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                disabled={profileLoading}
               />
             </div>
             
@@ -115,11 +135,12 @@ export default function SettingsPageClient() {
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 multiline
+                disabled={profileLoading}
               />
             </div>
             
             <div className="flex justify-end">
-              <Button type="submit">저장</Button>
+              <Button type="submit" loading={profileLoading}>저장</Button>
             </div>
           </form>
         )}
@@ -128,6 +149,12 @@ export default function SettingsPageClient() {
         {activeTab === 'password' && (
           <form onSubmit={handlePasswordChange} className="bg-white shadow rounded-lg p-6">
             <h2 className="text-lg font-medium text-gray-900 mb-4">Change Password</h2>
+
+            {passwordMessage.text && (
+              <div className={`mb-4 rounded-md p-4 ${passwordMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                <div className="text-sm">{passwordMessage.text}</div>
+              </div>
+            )}
             
             <div className="mb-4">
               <Input
@@ -136,6 +163,7 @@ export default function SettingsPageClient() {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
+                disabled={passwordLoading}
               />
             </div>
             
@@ -146,6 +174,7 @@ export default function SettingsPageClient() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
+                disabled={passwordLoading}
               />
             </div>
             
@@ -156,11 +185,12 @@ export default function SettingsPageClient() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                disabled={passwordLoading}
               />
             </div>
             
             <div className="flex justify-end">
-              <Button type="submit">비밀번호 변경</Button>
+              <Button type="submit" loading={passwordLoading}>비밀번호 변경</Button>
             </div>
           </form>
         )}
