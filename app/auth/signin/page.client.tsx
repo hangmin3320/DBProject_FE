@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import NavbarWrapper from '../../_components/layout/NavbarWrapper';
 import { Input, Button } from '../../_components/ui';
 import { useAuthStore } from '../../_store/auth';
 import { userApi } from '../../_lib/api';
@@ -45,7 +46,8 @@ export default function SignInPageClient() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <NavbarWrapper />
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -103,6 +105,6 @@ export default function SignInPageClient() {
           </div>
         </form>
       </div>
-    </div>
+    </main>
   );
 }

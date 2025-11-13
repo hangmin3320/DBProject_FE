@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import NavbarWrapper from '../_components/layout/NavbarWrapper';
 import { Button, Input } from '../_components/ui';
 import { useAuthStore } from '../_store/auth';
 import { userApi } from '../_lib/api';
@@ -78,7 +79,8 @@ export default function SettingsPageClient() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50">
+      <NavbarWrapper />
       <div className="max-w-3xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
         
@@ -195,6 +197,6 @@ export default function SettingsPageClient() {
           </form>
         )}
       </div>
-    </div>
+    </main>
   );
 }

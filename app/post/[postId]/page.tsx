@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import NavbarWrapper from '../../_components/layout/NavbarWrapper';
 import { PostCard } from '../../_components/domain/PostCard';
 import { CommentItem } from '../../_components/domain/CommentItem';
 import { Input, Button } from '../../_components/ui';
@@ -134,7 +135,8 @@ export default function PostDetailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50">
+      <NavbarWrapper />
       {/* Post Detail */}
       <div className="max-w-2xl mx-auto py-6 px-4">
         <PostCard
@@ -194,6 +196,6 @@ export default function PostDetailPage() {
         onClose={() => setEditingComment(null)}
         onCommentUpdated={handleCommentUpdated}
       />
-    </div>
+    </main>
   );
 }

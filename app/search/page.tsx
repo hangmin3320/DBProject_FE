@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import NavbarWrapper from '../_components/layout/NavbarWrapper';
 import { Avatar } from '../_components/ui';
 import { User } from '../types/user';
 import { userApi } from '../_lib/api';
@@ -43,7 +44,8 @@ export default function SearchResultsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50">
+      <NavbarWrapper />
       <div className="max-w-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-6">
           검색 결과: "{query}"
@@ -80,6 +82,6 @@ export default function SearchResultsPage() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

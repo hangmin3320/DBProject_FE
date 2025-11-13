@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import NavbarWrapper from '../../_components/layout/NavbarWrapper';
 import PostsList from '../../_components/domain/PostsList';
 import { FollowButton } from '../../_components/domain/FollowButton';
 import { Avatar } from '../../_components/ui/Avatar';
@@ -75,7 +76,8 @@ export default function ProfilePageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50">
+      <NavbarWrapper />
       {/* Profile Header */}
       <div className="bg-white shadow">
         <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
@@ -132,6 +134,6 @@ export default function ProfilePageClient() {
         {/* Use PostsList component, but filter to show only this user's posts */}
         <PostsList activeTab="all" userId={Number(userId)} currentUser={currentUser || undefined} />
       </div>
-    </div>
+    </main>
   );
 }
