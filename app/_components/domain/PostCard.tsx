@@ -8,6 +8,8 @@ import { Avatar } from '../ui/Avatar';
 import { Button } from '../ui';
 import { formatDate, extractHashtags } from '../../_lib/utils';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://127.0.0.1:8000';
+
 interface PostCardProps {
   post: Post;
   currentUser?: User; // Pass current user as prop to avoid hook issues
@@ -87,7 +89,7 @@ const PostCard = ({ post, currentUser, onEdit, onDelete, onLike }: PostCardProps
               {post.images.map((image, index) => (
                 <img 
                   key={index} 
-                  src={image.image_url} 
+                  src={`${API_BASE_URL}${image.image_url}`} 
                   alt={`Post image ${index + 1}`} 
                   className="w-full h-auto rounded object-cover"
                 />
