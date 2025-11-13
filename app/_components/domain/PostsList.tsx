@@ -37,6 +37,13 @@ export default function PostsList({
 
         let fetchedPosts: Post[] = [];
 
+        // If not authenticated and not on a specific user/hashtag page, prevent fetching posts
+        if (!isAuthenticated && !userId && !hashtagName) {
+          setPosts([]);
+          setError('Please log in to view posts.');
+          return;
+        }
+        
         if (initialPosts) {
           // Use provided initial posts
           fetchedPosts = initialPosts;
@@ -48,8 +55,10 @@ export default function PostsList({
           if (isAuthenticated) {
             fetchedPosts = await postApi.getFeed();
           } else {
-            // If not authenticated, show public posts instead
-            fetchedPosts = await postApi.getPosts();
+            // If not authenticated, following feed should not show public posts
+            setPosts([]);
+            setError('Please log in to view your following feed.');
+            return;
           }
         } else if (activeTab === 'trending') {
           fetchedPosts = await postApi.getTrending();
@@ -57,7 +66,14 @@ export default function PostsList({
           // Fetch posts for a specific user
           fetchedPosts = await postApi.getPosts(0, 100, userId);
         } else {
-          fetchedPosts = await postApi.getPosts();
+          // Default to all posts, but only if authenticated
+          if (isAuthenticated) {
+            fetchedPosts = await postApi.getPosts();
+          } else {
+            setPosts([]);
+            setError('Please log in to view all posts.');
+            return;
+          }
         }
 
         setPosts(fetchedPosts);
