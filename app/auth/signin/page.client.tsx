@@ -25,20 +25,11 @@ export default function SignInPageClient() {
       // Set token in cookie
       Cookies.set('access_token', response.access_token, { expires: 7, secure: true, sameSite: 'strict' });
 
-      // Extract user data (in a real app, you would get this from the response or another API call)
-      // For now, we'll use mock data, but in a real app you would fetch user details
-      const mockUser = {
-        user_id: 1,
-        email,
-        username: email.split('@')[0], // Just for demo purposes
-        bio: '',
-        created_at: new Date().toISOString(),
-        follower_count: 0,
-        following_count: 0
-      };
+      // Fetch current user's data
+      const currentUser = await userApi.getMe();
 
       // Update auth store
-      login(mockUser, response.access_token);
+      login(currentUser, response.access_token);
 
       // Redirect to home page
       router.push('/');

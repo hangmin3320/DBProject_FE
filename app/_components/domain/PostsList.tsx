@@ -5,6 +5,7 @@ import { PostCard } from './PostCard';
 import { Post } from '../../types/post';
 import { User } from '../../types/user';
 import { postApi } from '../../_lib/api';
+import { EditPostModal } from './EditPostModal';
 
 interface PostsListProps {
   activeTab?: string; // Optional - for different feed types
@@ -15,26 +16,27 @@ interface PostsListProps {
   isAuthenticated?: boolean; // Whether the user is authenticated
 }
 
-export default function PostsList({ 
-  activeTab = 'all', 
-  userId, 
-  hashtagName, 
-  initialPosts, 
+export default function PostsList({
+  activeTab = 'all',
+  userId,
+  hashtagName,
+  initialPosts,
   currentUser,
-  isAuthenticated = false 
+  isAuthenticated = false
 }: PostsListProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
         setError(null); // Reset error state
-        
+
         let fetchedPosts: Post[] = [];
-        
+
         if (initialPosts) {
           // Use provided initial posts
           fetchedPosts = initialPosts;
@@ -57,7 +59,7 @@ export default function PostsList({
         } else {
           fetchedPosts = await postApi.getPosts();
         }
-        
+
         setPosts(fetchedPosts);
       } catch (error: any) {
         console.error('Error fetching posts:', error);
@@ -85,19 +87,35 @@ export default function PostsList({
   };
 
   const handleLikePost = async (postId: number) => {
+    const originalPosts = [...posts];
+
+    const updatedPosts = posts.map(post => {
+      if (post.post_id === postId) {
+        const newIsLiked = !post.is_liked;
+        const newLikeCount = newIsLiked ? post.like_count + 1 : post.like_count - 1;
+        return { ...post, is_liked: newIsLiked, like_count: newLikeCount };
+      }
+      return post;
+    });
+
+    // Optimistic update
+    setPosts(updatedPosts);
+
     try {
-      // In a real app, this would make an API call
-      // await postApi.likePost(postId);
-      
-      // For now, update the count optimistically
-      setPosts(posts.map(post => 
-        post.post_id === postId 
-          ? { ...post, like_count: post.like_count + 1 } 
-          : post
-      ));
+      await postApi.likePost(postId);
     } catch (error) {
       console.error('Error liking post:', error);
+      // Revert on error
+      setPosts(originalPosts);
     }
+  };
+
+  const handleEditPost = (post: Post) => {
+    setEditingPost(post);
+  };
+
+  const handlePostUpdated = (updatedPost: Post) => {
+    setPosts(posts.map(p => p.post_id === updatedPost.post_id ? updatedPost : p));
   };
 
   if (loading) {
@@ -121,12 +139,13 @@ export default function PostsList({
     <div>
       {posts.length > 0 ? (
         posts.map(post => (
-          <PostCard 
-            key={post.post_id} 
-            post={post} 
+          <PostCard
+            key={post.post_id}
+            post={post}
             currentUser={currentUser}
             onDelete={handleDeletePost}
             onLike={handleLikePost}
+            onEdit={handleEditPost}
           />
         ))
       ) : (
@@ -134,6 +153,12 @@ export default function PostsList({
           <p className="text-gray-500">No posts yet</p>
         </div>
       )}
+
+      <EditPostModal
+        post={editingPost}
+        onClose={() => setEditingPost(null)}
+        onPostUpdated={handlePostUpdated}
+      />
     </div>
   );
 }

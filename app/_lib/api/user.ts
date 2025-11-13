@@ -15,6 +15,12 @@ export const userApi = {
     return response.data;
   },
 
+  // Get the current authenticated user
+  getMe: async (): Promise<User> => {
+    const response = await apiClient.get('/users/me');
+    return response.data;
+  },
+
   // Get user by ID
   getUserById: async (userId: number): Promise<User> => {
     const response = await apiClient.get(`/users/${userId}`);

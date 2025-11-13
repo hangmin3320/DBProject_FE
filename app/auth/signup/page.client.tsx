@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 import { Input, Button } from '../../_components/ui';
 import { useAuthStore } from '../../_store/auth';
 import { userApi } from '../../_lib/api';
@@ -44,20 +45,14 @@ export default function SignUpPageClient() {
         password
       });
       
-      // After signup, log the user in
-      // For now, we'll create a mock token (in a real app, you would get this from the signup response)
-      const mockToken = 'mock_access_token';
+      // After signup, log the user in automatically
+      const loginResponse = await userApi.login(email, password);
       
+      // Set token in cookie
+      Cookies.set('access_token', loginResponse.access_token, { expires: 7, secure: true, sameSite: 'strict' });
+
       // Update auth store
-      login({
-        user_id: userData.user_id,
-        email: userData.email,
-        username: userData.username,
-        bio: userData.bio,
-        created_at: userData.created_at,
-        follower_count: userData.follower_count,
-        following_count: userData.following_count
-      }, mockToken);
+      login(userData, loginResponse.access_token);
       
       // Redirect to home page
       router.push('/');

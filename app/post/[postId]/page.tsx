@@ -11,6 +11,8 @@ import { User } from '../../types/user';
 import { postApi } from '../../_lib/api';
 import { commentApi } from '../../_lib/api';
 import { useAuthStore } from '../../_store/auth';
+import { EditPostModal } from '../../_components/domain/EditPostModal';
+import { EditCommentModal } from '../../_components/domain/EditCommentModal';
 
 export default function PostDetailPage() {
   const { postId } = useParams();
@@ -19,6 +21,8 @@ export default function PostDetailPage() {
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
   const { user: currentUser } = useAuthStore();
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
+  const [editingComment, setEditingComment] = useState<Comment | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,17 +88,25 @@ export default function PostDetailPage() {
   };
 
   const handleLikePost = async (postId: number) => {
+    if (!post) return;
+
+    const originalPost = { ...post };
+    const newIsLiked = !post.is_liked;
+    const newLikeCount = newIsLiked ? post.like_count + 1 : post.like_count - 1;
+
+    // Optimistic update
+    setPost({
+      ...post,
+      is_liked: newIsLiked,
+      like_count: newLikeCount,
+    });
+
     try {
-      // In a real app, this would make an API call
-      // await postApi.likePost(postId);
-      
-      // For now, update the count optimistically
-      setPost({
-        ...post,
-        like_count: post.like_count + 1
-      });
+      await postApi.likePost(postId);
     } catch (error) {
       console.error('Error liking post:', error);
+      // Revert on error
+      setPost(originalPost);
     }
   };
 
@@ -107,6 +119,22 @@ export default function PostDetailPage() {
     }
   };
 
+  const handleEditPost = (post: Post) => {
+    setEditingPost(post);
+  };
+
+  const handlePostUpdated = (updatedPost: Post) => {
+    setPost(updatedPost);
+  };
+
+  const handleEditComment = (comment: Comment) => {
+    setEditingComment(comment);
+  };
+
+  const handleCommentUpdated = (updatedComment: Comment) => {
+    setComments(comments.map(c => c.comment_id === updatedComment.comment_id ? updatedComment : c));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Post Detail */}
@@ -116,6 +144,7 @@ export default function PostDetailPage() {
           currentUser={currentUser || undefined}
           onDelete={handleDeletePost}
           onLike={handleLikePost}
+          onEdit={handleEditPost}
         />
 
         {/* Comment Form */}
@@ -148,6 +177,7 @@ export default function PostDetailPage() {
                   comment={comment}
                   currentUser={currentUser || undefined}
                   onDelete={handleDeleteComment}
+                  onEdit={handleEditComment}
                 />
               ))}
             </div>
@@ -156,6 +186,16 @@ export default function PostDetailPage() {
           )}
         </div>
       </div>
+      <EditPostModal 
+        post={editingPost}
+        onClose={() => setEditingPost(null)}
+        onPostUpdated={handlePostUpdated}
+      />
+      <EditCommentModal
+        comment={editingComment}
+        onClose={() => setEditingComment(null)}
+        onCommentUpdated={handleCommentUpdated}
+      />
     </div>
   );
 }

@@ -19,6 +19,7 @@ export interface Post {
   user?: User; // Optional user object for enriched data
   created_at: string;
   like_count: number;
+  is_liked?: boolean;
   hashtags: Hashtag[];
   images: Image[];
 }
