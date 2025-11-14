@@ -105,6 +105,7 @@ export default function PostsList({
   const handleLikePost = async (postId: number) => {
     const originalPosts = [...posts];
 
+    // 1. Optimistic update for immediate UI feedback
     const updatedPosts = posts.map(post => {
       if (post.post_id === postId) {
         const newIsLiked = !post.is_liked;
@@ -113,18 +114,22 @@ export default function PostsList({
       }
       return post;
     });
-
-    // Optimistic update
     setPosts(updatedPosts);
 
     try {
-      // The API should return the updated post object
-      const updatedPost = await postApi.likePost(postId);
-      // Sync state with the server's response
-      setPosts(posts.map(p => p.post_id === updatedPost.post_id ? updatedPost : p));
+      // 2. Call the like API
+      await postApi.likePost(postId);
+
+      // 3. Fetch the authoritative post data to ensure consistency
+      const authoritativePost = await postApi.getPostById(postId);
+
+      // 4. Sync the state with the authoritative data
+      setPosts(currentPosts => 
+        currentPosts.map(p => p.post_id === authoritativePost.post_id ? authoritativePost : p)
+      );
     } catch (error) {
-      console.error('Error liking post:', error);
-      // Revert on error
+      console.error('Error liking post, reverting:', error);
+      // 5. Revert on error
       setPosts(originalPosts);
     }
   };
