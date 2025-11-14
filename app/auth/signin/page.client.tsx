@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import NavbarWrapper from '../../_components/layout/NavbarWrapper';
 import { Input, Button } from '../../_components/ui';
 import { useAuthStore } from '../../_store/auth';
 import { userApi } from '../../_lib/api';
@@ -15,7 +14,20 @@ export default function SignInPageClient() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const { login } = useAuthStore();
+  const { user, login } = useAuthStore();
+
+  // Redirect if user is already authenticated
+  useEffect(() => {
+    if (user && user.user_id) {
+      router.push('/');
+      router.refresh();
+    }
+  }, [user, router]);
+
+  // If user is already logged in, don't render the component
+  if (user && user.user_id) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +35,7 @@ export default function SignInPageClient() {
     try {
       // API call to login
       const response = await userApi.login(email, password);
-      
+
       // Set token in cookie
       Cookies.set('access_token', response.access_token, { expires: 7, secure: true, sameSite: 'strict' });
 
@@ -47,7 +59,6 @@ export default function SignInPageClient() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <NavbarWrapper />
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

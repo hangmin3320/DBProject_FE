@@ -118,7 +118,10 @@ export default function PostsList({
     setPosts(updatedPosts);
 
     try {
-      await postApi.likePost(postId);
+      // The API should return the updated post object
+      const updatedPost = await postApi.likePost(postId);
+      // Sync state with the server's response
+      setPosts(posts.map(p => p.post_id === updatedPost.post_id ? updatedPost : p));
     } catch (error) {
       console.error('Error liking post:', error);
       // Revert on error

@@ -54,6 +54,9 @@ export const validatePassword = (password: string): boolean => {
  * @returns Array of hashtags
  */
 export const extractHashtags = (text: string): string[] => {
+  if (!text) {
+    return [];
+  }
   const hashtagRegex = /#[^\s#]+/g;
   const matches = text.match(hashtagRegex);
   return matches ? matches.map(tag => tag.substring(1)) : []; // Remove the # symbol

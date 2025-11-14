@@ -28,7 +28,7 @@ const PostCard = ({ post, currentUser, onEdit, onDelete, onLike }: PostCardProps
   const hashtags = extractHashtags(post.content);
   
   // Truncate content if too long
-  const shouldTruncate = post.content.length > 200;
+  const shouldTruncate = (post.content || '').length > 200;
   const displayContent = isExpanded 
     ? post.content 
     : shouldTruncate 

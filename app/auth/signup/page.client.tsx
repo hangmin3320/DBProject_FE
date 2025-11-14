@@ -1,10 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import NavbarWrapper from '../../_components/layout/NavbarWrapper';
 import { Input, Button } from '../../_components/ui';
 import { useAuthStore } from '../../_store/auth';
 import { userApi } from '../../_lib/api';
@@ -18,25 +17,38 @@ export default function SignUpPageClient() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuthStore();
+  const { user, login } = useAuthStore();
+
+  // Redirect if user is already authenticated
+  useEffect(() => {
+    if (user) {
+      router.push('/');
+      router.refresh();
+    }
+  }, [user, router]);
+
+  // If user is already logged in, don't render the component
+  if (user) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     // Validate inputs
     if (!validateEmail(email)) {
       setError('Please enter a valid email address');
       return;
     }
-    
+
     if (!validatePassword(password)) {
       setError('Password must be at least 8 characters with uppercase, lowercase, and number');
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       // API call to sign up
       const userData = await userApi.signup({
@@ -45,16 +57,16 @@ export default function SignUpPageClient() {
         bio,
         password
       });
-      
+
       // After signup, log the user in automatically
       const loginResponse = await userApi.login(email, password);
-      
+
       // Set token in cookie
       Cookies.set('access_token', loginResponse.access_token, { expires: 7, secure: true, sameSite: 'strict' });
 
       // Update auth store
       login(userData, loginResponse.access_token);
-      
+
       // Redirect to home page
       router.push('/');
       router.refresh(); // Refresh to update the UI based on auth status
@@ -68,7 +80,6 @@ export default function SignUpPageClient() {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <NavbarWrapper />
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

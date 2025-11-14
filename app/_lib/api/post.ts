@@ -60,7 +60,7 @@ export const postApi = {
   },
 
   // Like a post
-  likePost: async (postId: number): Promise<any> => {
+  likePost: async (postId: number): Promise<Post> => {
     const response = await apiClient.post(`/posts/${postId}/like`);
     return response.data;
   },

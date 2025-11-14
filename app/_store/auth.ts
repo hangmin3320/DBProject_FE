@@ -33,6 +33,7 @@ export const useAuthStore = create<AuthState>()(
         logout: () => {
           Cookies.remove('access_token');
           setAuthToken(null);
+          localStorage.removeItem('auth-storage'); // Clear persisted state
           return set({ user: null, isAuthenticated: false });
         },
         updateProfile: (user) => set({ user }),
