@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { Post, PostCreate, PostUpdate } from '../types/post';
+import { Post, PostCreate, PostUpdate } from '../../types/post';
 
 // Post API functions
 export const postApi = {

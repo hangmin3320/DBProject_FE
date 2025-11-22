@@ -11,6 +11,7 @@ interface AuthState {
     email: string;
     username: string;
     bio: string;
+    created_at: string;
     follower_count: number;
     following_count: number;
   } | null;

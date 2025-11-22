@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAuthStore } from '../_store/auth';
+import { useAuthStore } from '../../_store/auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

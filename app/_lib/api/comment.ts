@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { Comment, CommentCreate, CommentUpdate } from '../types/comment';
+import { Comment, CommentCreate, CommentUpdate } from '../../types/comment';
 
 // Comment API functions
 export const commentApi = {

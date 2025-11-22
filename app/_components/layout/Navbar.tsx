@@ -42,11 +42,11 @@ const Navbar = () => {
               </Link>
               {user && (
                 <>
-                  <Link 
-                    href={`/profile/${user.user_id || user.id}`} 
+                  <Link
+                    href={`/profile/${user.user_id}`}
                     className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      pathname.includes('/profile') 
-                        ? 'border-blue-500 text-gray-900' 
+                      pathname.includes('/profile')
+                        ? 'border-blue-500 text-gray-900'
                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                     }`}
                   >
@@ -85,7 +85,7 @@ const Navbar = () => {
               <div className="ml-4 flex items-center md:ml-6">
                 <div className="relative ml-3">
                   <div className="flex space-x-3 items-center">
-                    <Link href={`/profile/${user.user_id || user.id}`}>
+                    <Link href={`/profile/${user.user_id}`}>
                       <Avatar 
                         src="" 
                         fallback={user.username.charAt(0).toUpperCase()} 
