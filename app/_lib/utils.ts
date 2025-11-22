@@ -1,13 +1,14 @@
 // Utility functions for the Micro SNS application
 
 /**
- * Format date to a human-readable string
+ * Format date to a human-readable string in KST timezone
  * @param date - Date object or string
- * @returns Formatted date string
+ * @returns Formatted date string in KST
  */
 export const formatDate = (date: Date | string): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   return new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul', // KST (Korea Standard Time)
     year: 'numeric',
     month: 'short',
     day: 'numeric',
