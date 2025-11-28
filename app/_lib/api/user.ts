@@ -48,7 +48,7 @@ export const userApi = {
 
   // Follow a user
   followUser: async (userId: number): Promise<void> => {
-    await apiClient.post(`/users/${userId}/follow`);
+    await apiClient.post(`/users/${userId}/follow`, {});
   },
 
   // Unfollow a user
