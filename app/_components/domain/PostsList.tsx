@@ -14,7 +14,7 @@ interface PostsListProps {
   initialPosts?: Post[]; // Optional initial posts to display without fetching
   currentUser?: User; // Pass current user as prop to avoid hook issues
   isAuthenticated?: boolean; // Whether the user is authenticated
-  sortBy?: 'latest' | 'likes' | 'oldest'; // New prop for sorting
+  sortBy?: 'latest' | 'oldest'; // New prop for sorting
 }
 
 export default function PostsList({

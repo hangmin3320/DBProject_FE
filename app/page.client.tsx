@@ -9,7 +9,7 @@ import { postApi } from './_lib/api';
 
 export default function HomePageClient() {
   const [activeTab, setActiveTab] = useState('following'); // following, trending, all
-  const [sortBy, setSortBy] = useState<'latest' | 'likes' | 'oldest'>('latest');
+  const [sortBy, setSortBy] = useState<'latest' | 'oldest'>('latest');
   const { user: currentUser, isAuthenticated } = useAuthStore();
   
   const [content, setContent] = useState('');
@@ -84,7 +84,6 @@ export default function HomePageClient() {
                 onChange={(e) => setSortBy(e.target.value as 'latest' | 'likes' | 'oldest')}
               >
                 <option value="latest">최신순</option>
-                <option value="likes">좋아요순</option>
                 <option value="oldest">오래된순</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
