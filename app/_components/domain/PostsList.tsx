@@ -14,6 +14,7 @@ interface PostsListProps {
   initialPosts?: Post[]; // Optional initial posts to display without fetching
   currentUser?: User; // Pass current user as prop to avoid hook issues
   isAuthenticated?: boolean; // Whether the user is authenticated
+  sortBy?: 'latest' | 'likes' | 'oldest'; // New prop for sorting
 }
 
 export default function PostsList({
@@ -22,7 +23,8 @@ export default function PostsList({
   hashtagName,
   initialPosts,
   currentUser,
-  isAuthenticated = false
+  isAuthenticated = false,
+  sortBy = 'latest'
 }: PostsListProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,11 +66,11 @@ export default function PostsList({
           fetchedPosts = await postApi.getTrending();
         } else if (userId) {
           // Fetch posts for a specific user
-          fetchedPosts = await postApi.getPosts(0, 100, userId);
+          fetchedPosts = await postApi.getPosts(0, 100, userId, sortBy);
         } else {
           // Default to all posts, but only if authenticated
           if (isAuthenticated) {
-            fetchedPosts = await postApi.getPosts();
+            fetchedPosts = await postApi.getPosts(0, 100, undefined, sortBy);
           } else {
             setPosts([]);
             setError('Please log in to view all posts.');
@@ -91,7 +93,7 @@ export default function PostsList({
     };
 
     fetchPosts();
-  }, [activeTab, userId, hashtagName, initialPosts, isAuthenticated]);
+  }, [activeTab, userId, hashtagName, initialPosts, isAuthenticated, sortBy]);
 
   const handleDeletePost = async (postId: number) => {
     try {

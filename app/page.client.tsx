@@ -9,6 +9,7 @@ import { postApi } from './_lib/api';
 
 export default function HomePageClient() {
   const [activeTab, setActiveTab] = useState('following'); // following, trending, all
+  const [sortBy, setSortBy] = useState<'latest' | 'likes' | 'oldest'>('latest');
   const { user: currentUser, isAuthenticated } = useAuthStore();
   
   const [content, setContent] = useState('');
@@ -54,25 +55,45 @@ export default function HomePageClient() {
       <NavbarWrapper />
       <div className="max-w-2xl mx-auto py-6 px-4">
         {/* Tab Navigation */}
-        <div className="flex border-b border-gray-200 mb-6">
-          <button
-            className={`py-2 px-4 font-medium text-sm ${activeTab === 'following' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-            onClick={() => setActiveTab('following')}
-          >
-            팔로잉 피드
-          </button>
-          <button
-            className={`py-2 px-4 font-medium text-sm ${activeTab === 'trending' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-            onClick={() => setActiveTab('trending')}
-          >
-            트렌딩
-          </button>
-          <button
-            className={`py-2 px-4 font-medium text-sm ${activeTab === 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-            onClick={() => setActiveTab('all')}
-          >
-            전체 게시물
-          </button>
+        <div className="flex justify-between items-center border-b border-gray-200 mb-6">
+          <div className="flex">
+            <button
+              className={`py-2 px-4 font-medium text-sm ${activeTab === 'following' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('following')}
+            >
+              팔로잉 피드
+            </button>
+            <button
+              className={`py-2 px-4 font-medium text-sm ${activeTab === 'trending' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('trending')}
+            >
+              트렌딩
+            </button>
+            <button
+              className={`py-2 px-4 font-medium text-sm ${activeTab === 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+              onClick={() => setActiveTab('all')}
+            >
+              전체 게시물
+            </button>
+          </div>
+          {activeTab === 'all' && (
+            <div className="relative">
+              <select
+                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline-blue focus:border-blue-300 text-sm"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'latest' | 'likes' | 'oldest')}
+              >
+                <option value="latest">최신순</option>
+                <option value="likes">좋아요순</option>
+                <option value="oldest">오래된순</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Create Post Form */}
@@ -119,6 +140,7 @@ export default function HomePageClient() {
           activeTab={activeTab} 
           currentUser={currentUser || undefined} 
           isAuthenticated={isAuthenticated} 
+          sortBy={sortBy}
         />
       </div>
     </main>
