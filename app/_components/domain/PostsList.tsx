@@ -14,7 +14,7 @@ interface PostsListProps {
   initialPosts?: Post[]; // Optional initial posts to display without fetching
   currentUser?: User; // Pass current user as prop to avoid hook issues
   isAuthenticated?: boolean; // Whether the user is authenticated
-  sortBy?: 'latest' | 'oldest'; // New prop for sorting
+  sortBy?: 'latest' | 'oldest' | 'liked'; // New prop for sorting
 }
 
 export default function PostsList({
@@ -39,14 +39,21 @@ export default function PostsList({
 
         let fetchedPosts: Post[] = [];
 
-        // If not authenticated and not on a specific user/hashtag page, prevent fetching posts
-        if (!isAuthenticated && !userId && !hashtagName) {
+        if (!isAuthenticated && !userId && !hashtagName && sortBy !== 'liked') {
           setPosts([]);
           setError('Please log in to view posts.');
           return;
         }
         
-        if (initialPosts) {
+        if (sortBy === 'liked') {
+          if(isAuthenticated) {
+            fetchedPosts = await postApi.getLikedPosts();
+          } else {
+            setError('Please log in to see liked posts.');
+            return;
+          }
+        }
+        else if (initialPosts) {
           // Use provided initial posts
           fetchedPosts = initialPosts;
         } else if (hashtagName) {

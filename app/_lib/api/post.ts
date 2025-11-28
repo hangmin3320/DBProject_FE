@@ -4,7 +4,7 @@ import { Post, PostCreate, PostUpdate } from '../../types/post';
 // Post API functions
 export const postApi = {
   // Get posts
-  getPosts: async (skip: number = 0, limit: number = 100, userId?: number, sortBy: 'latest' | 'likes' | 'oldest' = 'latest'): Promise<Post[]> => {
+  getPosts: async (skip: number = 0, limit: number = 100, userId?: number, sortBy: 'latest' | 'oldest' = 'latest'): Promise<Post[]> => {
     const response = await apiClient.get('/posts', {
       params: { skip, limit, user_id: userId, sort_by: sortBy }
     });
@@ -20,6 +20,12 @@ export const postApi = {
   // Get trending posts
   getTrending: async (skip: number = 0, limit: number = 10): Promise<Post[]> => {
     const response = await apiClient.get('/posts/trending', { params: { skip, limit } });
+    return response.data;
+  },
+
+  // Get liked posts
+  getLikedPosts: async (): Promise<Post[]> => {
+    const response = await apiClient.get('/posts/liked');
     return response.data;
   },
 
