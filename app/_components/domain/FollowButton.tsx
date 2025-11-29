@@ -20,31 +20,32 @@ const FollowButton = ({ userId, isFollowing, onFollowToggle }: FollowButtonProps
     setIsFollowingState(isFollowing);
   }, [isFollowing]);
 
-  // Don't show button if it's the current user's own profile
   if (!isAuthenticated || currentUser?.user_id === userId) {
     return null;
   }
 
   const handleFollowToggle = async () => {
-    if (!currentUser) {
-      // Not logged in, maybe redirect to sign in in a real app or show a toast
-      return;
-    }
+    if (!currentUser) return;
 
+    const previousState = isFollowingState;
+    // 1. Optimistic Update: Change UI immediately
+    setIsFollowingState(!previousState);
     setIsLoading(true);
+
     try {
-      if (isFollowingState) {
+      if (previousState) {
+        // If it was following, now unfollow
         await userApi.unfollowUser(userId);
-        setIsFollowingState(false);
       } else {
+        // If it was not following, now follow
         await userApi.followUser(userId);
-        setIsFollowingState(true);
       }
-      onFollowToggle?.(!isFollowingState);
+      onFollowToggle?.(!previousState);
     } catch (error) {
       console.error('Error toggling follow status:', error);
-      // Revert state if API call fails
-      setIsFollowingState(isFollowingState);
+      // 2. Revert on error
+      setIsFollowingState(previousState);
+      // In a real app, you might want to show a toast notification here
     } finally {
       setIsLoading(false);
     }
@@ -56,6 +57,8 @@ const FollowButton = ({ userId, isFollowing, onFollowToggle }: FollowButtonProps
       size="sm"
       onClick={handleFollowToggle}
       loading={isLoading}
+      // Prevent clicking again while the API call is in progress
+      disabled={isLoading}
     >
       {isFollowingState ? '언팔로우' : '팔로우'}
     </Button>
