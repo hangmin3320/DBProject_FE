@@ -38,7 +38,7 @@ const Navbar = () => {
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
               >
-                Home
+                홈
               </Link>
               {user && (
                 <>
@@ -50,7 +50,7 @@ const Navbar = () => {
                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                     }`}
                   >
-                    Profile
+                    프로필
                   </Link>
                   <Link 
                     href="/settings" 
@@ -60,7 +60,7 @@ const Navbar = () => {
                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                     }`}
                   >
-                    Settings
+                    설정
                   </Link>
                 </>
               )}
@@ -70,15 +70,14 @@ const Navbar = () => {
           <div className="flex items-center">
             <form onSubmit={handleSearch} className="flex items-center mr-4">
               <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Search users..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-64"
-                />
-              </div>
-              <Button type="submit" className="ml-2">Search</Button>
+                                  <Input
+                                    type="text"
+                                    placeholder="사용자 검색..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-64"
+                                  />              </div>
+              <Button type="submit" className="ml-2">검색</Button>
             </form>
             
             {user ? (
@@ -98,7 +97,7 @@ const Navbar = () => {
                       onClick={logout}
                       className="text-sm"
                     >
-                      Logout
+                      로그아웃
                     </Button>
                   </div>
                 </div>
@@ -106,10 +105,10 @@ const Navbar = () => {
             ) : (
               <div className="flex space-x-2">
                 <Link href="/auth/signin">
-                  <Button variant="ghost">Sign In</Button>
+                  <Button variant="ghost">로그인</Button>
                 </Link>
                 <Link href="/auth/signup">
-                  <Button>Sign Up</Button>
+                  <Button>가입</Button>
                 </Link>
               </div>
             )}
