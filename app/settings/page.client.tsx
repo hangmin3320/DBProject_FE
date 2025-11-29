@@ -33,10 +33,10 @@ export default function SettingsPageClient() {
     try {
       const updatedUserData = await userApi.updateUser(user.user_id, { username, bio });
       updateProfile(updatedUserData);
-      setProfileMessage({ type: 'success', text: 'Profile updated successfully' });
+      setProfileMessage({ type: 'success', text: '프로필이 성공적으로 업데이트되었습니다.' });
     } catch (error) {
       console.error('Profile update error:', error);
-      setProfileMessage({ type: 'error', text: 'Failed to update profile' });
+      setProfileMessage({ type: 'error', text: '프로필 업데이트에 실패했습니다.' });
     } finally {
       setProfileLoading(false);
       setTimeout(() => setProfileMessage({ type: '', text: '' }), 3000);
@@ -48,11 +48,11 @@ export default function SettingsPageClient() {
     if (!user) return;
 
     if (newPassword !== confirmPassword) {
-      setPasswordMessage({ type: 'error', text: 'New passwords do not match' });
+      setPasswordMessage({ type: 'error', text: '새 비밀번호가 일치하지 않습니다.' });
       return;
     }
     if (newPassword.length < 8) {
-      setPasswordMessage({ type: 'error', text: 'Password must be at least 8 characters long' });
+      setPasswordMessage({ type: 'error', text: '비밀번호는 8자 이상이어야 합니다.' });
       return;
     }
 
@@ -64,14 +64,14 @@ export default function SettingsPageClient() {
         old_password: currentPassword,
         new_password: newPassword,
       });
-      setPasswordMessage({ type: 'success', text: 'Password updated successfully' });
+      setPasswordMessage({ type: 'success', text: '비밀번호가 성공적으로 업데이트되었습니다.' });
       // Clear form
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (error) {
       console.error('Password change error:', error);
-      setPasswordMessage({ type: 'error', text: 'Failed to change password. Check your current password.' });
+      setPasswordMessage({ type: 'error', text: '비밀번호 변경에 실패했습니다. 현재 비밀번호를 확인해주세요.' });
     } finally {
       setPasswordLoading(false);
       setTimeout(() => setPasswordMessage({ type: '', text: '' }), 3000);
@@ -82,7 +82,7 @@ export default function SettingsPageClient() {
     <main className="min-h-screen bg-gray-50">
       <NavbarWrapper />
       <div className="max-w-3xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">설정</h1>
         
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 mb-6">
@@ -113,7 +113,7 @@ export default function SettingsPageClient() {
         {/* Profile Update Form */}
         {activeTab === 'profile' && user && (
           <form onSubmit={handleProfileUpdate} className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Profile Information</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">프로필 정보</h2>
             
             {profileMessage.text && (
               <div className={`mb-4 rounded-md p-4 ${profileMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
@@ -123,7 +123,7 @@ export default function SettingsPageClient() {
             
             <div className="mb-4">
               <Input
-                label="Username"
+                label="사용자 이름"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -133,7 +133,7 @@ export default function SettingsPageClient() {
             
             <div className="mb-6">
               <Input
-                label="Bio"
+                label="자기소개"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 multiline
@@ -150,7 +150,7 @@ export default function SettingsPageClient() {
         {/* Password Change Form */}
         {activeTab === 'password' && (
           <form onSubmit={handlePasswordChange} className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Change Password</h2>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">비밀번호 변경</h2>
 
             {passwordMessage.text && (
               <div className={`mb-4 rounded-md p-4 ${passwordMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
@@ -160,7 +160,7 @@ export default function SettingsPageClient() {
             
             <div className="mb-4">
               <Input
-                label="Current Password"
+                label="현재 비밀번호"
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
@@ -171,7 +171,7 @@ export default function SettingsPageClient() {
             
             <div className="mb-4">
               <Input
-                label="New Password"
+                label="새 비밀번호"
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -182,7 +182,7 @@ export default function SettingsPageClient() {
             
             <div className="mb-6">
               <Input
-                label="Confirm New Password"
+                label="새 비밀번호 확인"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}

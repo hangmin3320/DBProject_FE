@@ -38,7 +38,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <>
             <span className="animate-spin mr-2">🌀</span>
-            Loading...
+            로딩 중...
           </>
         ) : (
           children

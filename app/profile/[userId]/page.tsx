@@ -19,7 +19,7 @@ export default function ProfilePage() {
   // Render a loading state while the client component loads
   return (
     <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p>Loading...</p>
+      <p>로딩 중...</p>
     </main>
   );
 }

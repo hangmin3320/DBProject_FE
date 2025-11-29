@@ -41,7 +41,7 @@ export default function PostsList({
 
         if (!isAuthenticated && !userId && !hashtagName && sortBy !== 'liked') {
           setPosts([]);
-          setError('Please log in to view posts.');
+          setError('게시물을 보려면 로그인하세요.');
           return;
         }
         
@@ -49,7 +49,7 @@ export default function PostsList({
           if(isAuthenticated) {
             fetchedPosts = await postApi.getLikedPosts();
           } else {
-            setError('Please log in to see liked posts.');
+            setError('좋아요 누른 게시물을 보려면 로그인하세요.');
             return;
           }
         }
@@ -66,7 +66,7 @@ export default function PostsList({
           } else {
             // If not authenticated, following feed should not show public posts
             setPosts([]);
-            setError('Please log in to view your following feed.');
+            setError('팔로잉 피드를 보려면 로그인하세요.');
             return;
           }
         } else if (activeTab === 'trending') {
@@ -80,7 +80,7 @@ export default function PostsList({
             fetchedPosts = await postApi.getPosts(0, 100, undefined, sortBy);
           } else {
             setPosts([]);
-            setError('Please log in to view all posts.');
+            setError('전체 게시물을 보려면 로그인하세요.');
             return;
           }
         }
@@ -90,9 +90,9 @@ export default function PostsList({
         console.error('Error fetching posts:', error);
         // Check if it's an authentication error
         if (error.response?.status === 401) {
-          setError('Please log in to view this content');
+          setError('이 콘텐츠를 보려면 로그인하세요.');
         } else {
-          setError('Failed to load posts. Please try again later.');
+          setError('게시물을 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.');
         }
       } finally {
         setLoading(false);
@@ -152,7 +152,7 @@ export default function PostsList({
   };
 
   if (loading) {
-    return <div className="text-center py-6">Loading...</div>;
+    return <div className="text-center py-6">로딩 중...</div>;
   }
 
   if (error) {
@@ -161,7 +161,7 @@ export default function PostsList({
         <p className="text-red-500">{error}</p>
         {error.includes('log in') && (
           <a href="/auth/signin" className="text-blue-600 hover:underline mt-2 inline-block">
-            Sign in
+            로그인
           </a>
         )}
       </div>
@@ -183,7 +183,7 @@ export default function PostsList({
         ))
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500">No posts yet</p>
+          <p className="text-gray-500">게시물이 없습니다</p>
         </div>
       )}
 

@@ -57,7 +57,7 @@ const FollowButton = ({ userId, isFollowing, onFollowToggle }: FollowButtonProps
       onClick={handleFollowToggle}
       loading={isLoading}
     >
-      {isFollowingState ? 'Unfollow' : 'Follow'}
+      {isFollowingState ? '언팔로우' : '팔로우'}
     </Button>
   );
 };

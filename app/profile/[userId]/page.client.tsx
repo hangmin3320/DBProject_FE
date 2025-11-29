@@ -30,7 +30,7 @@ export default function ProfilePageClient() {
         setUser(userData);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setError('Failed to fetch user data.');
+        setError('사용자 정보를 불러오는 데 실패했습니다.');
       } finally {
         setLoading(false);
       }
@@ -42,11 +42,11 @@ export default function ProfilePageClient() {
         fetchUserData(numericUserId);
       } else {
         console.error('Invalid user ID:', userId);
-        setError('Invalid user ID provided.');
+        setError('유효하지 않은 사용자 ID입니다.');
         setLoading(false);
       }
     } else {
-      setError('User ID not found.');
+      setError('사용자 ID를 찾을 수 없습니다.');
       setLoading(false);
     }
   }, [userId]);
@@ -54,7 +54,7 @@ export default function ProfilePageClient() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p>Loading...</p>
+        <p>로딩 중...</p>
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function ProfilePageClient() {
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p>User not found</p>
+        <p>사용자를 찾을 수 없습니다</p>
       </div>
     );
   }
@@ -99,7 +99,7 @@ export default function ProfilePageClient() {
                 <div className="flex space-x-3">
                   {isOwnProfile ? (
                     <Button>
-                      <a href="/settings">Edit Profile</a>
+                      <a href="/settings">프로필 수정</a>
                     </Button>
                   ) : (
                     <FollowButton 
@@ -115,11 +115,11 @@ export default function ProfilePageClient() {
               <div className="mt-4 flex space-x-6">
                 <div>
                   <span className="font-semibold text-gray-900">{user.following_count}</span>
-                  <span className="text-gray-600 ml-1">Following</span>
+                  <span className="text-gray-600 ml-1">팔로잉</span>
                 </div>
                 <div>
                   <span className="font-semibold text-gray-900">{user.follower_count}</span>
-                  <span className="text-gray-600 ml-1">Followers</span>
+                  <span className="text-gray-600 ml-1">팔로워</span>
                 </div>
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function ProfilePageClient() {
       
       {/* Profile Content - showing only this user's posts */}
       <div className="max-w-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Posts</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">게시물</h2>
         
         {/* Use PostsList component, but filter to show only this user's posts */}
         <PostsList activeTab="all" userId={Number(userId)} currentUser={currentUser || undefined} />

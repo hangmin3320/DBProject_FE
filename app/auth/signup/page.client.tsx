@@ -38,12 +38,12 @@ export default function SignUpPageClient() {
 
     // Validate inputs
     if (!validateEmail(email)) {
-      setError('Please enter a valid email address');
+      setError('유효한 이메일 주소를 입력해주세요.');
       return;
     }
 
     if (!validatePassword(password)) {
-      setError('Password must be at least 8 characters with uppercase, lowercase, and number');
+      setError('비밀번호는 8자 이상, 대/소문자, 숫자를 포함해야 합니다.');
       return;
     }
 
@@ -71,7 +71,7 @@ export default function SignUpPageClient() {
       router.push('/');
       router.refresh(); // Refresh to update the UI based on auth status
     } catch (err) {
-      setError('Failed to create account. Please try again.');
+      setError('계정 생성에 실패했습니다. 다시 시도해주세요.');
       console.error('Signup error:', err);
     } finally {
       setLoading(false);
@@ -83,7 +83,7 @@ export default function SignUpPageClient() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
+            계정 생성
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -100,7 +100,7 @@ export default function SignUpPageClient() {
                 type="email"
                 autoComplete="email"
                 required
-                label="Email address"
+                label="이메일 주소"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -111,7 +111,7 @@ export default function SignUpPageClient() {
                 name="username"
                 type="text"
                 required
-                label="Username"
+                label="사용자 이름"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -121,7 +121,7 @@ export default function SignUpPageClient() {
                 id="bio"
                 name="bio"
                 type="text"
-                label="Bio (Optional)"
+                label="자기소개 (선택)"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
               />
@@ -132,7 +132,7 @@ export default function SignUpPageClient() {
                 name="password"
                 type="password"
                 required
-                label="Password"
+                label="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -142,7 +142,7 @@ export default function SignUpPageClient() {
           <div className="flex items-center justify-between">
             <div className="text-sm">
               <Link href="/auth/signin" className="font-medium text-blue-600 hover:text-blue-500">
-                Already have an account? Sign in
+                이미 계정이 있으신가요? 로그인
               </Link>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function SignUpPageClient() {
               loading={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Sign up
+              가입하기
             </Button>
           </div>
         </form>

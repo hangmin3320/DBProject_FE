@@ -29,7 +29,7 @@ export const EditCommentModal = ({ comment, onClose, onCommentUpdated }: EditCom
 
   const handleUpdate = async () => {
     if (content.trim() === '') {
-      setError('Content cannot be empty.');
+      setError('내용을 입력해주세요.');
       return;
     }
 
@@ -41,7 +41,7 @@ export const EditCommentModal = ({ comment, onClose, onCommentUpdated }: EditCom
       onCommentUpdated(updatedComment);
       onClose();
     } catch (err) {
-      setError('Failed to update comment. Please try again.');
+      setError('댓글 수정에 실패했습니다. 다시 시도해주세요.');
       console.error('Update comment error:', err);
     } finally {
       setIsUpdating(false);
@@ -49,7 +49,7 @@ export const EditCommentModal = ({ comment, onClose, onCommentUpdated }: EditCom
   };
 
   return (
-    <Modal isOpen={!!comment} onClose={onClose} title="Edit Comment">
+    <Modal isOpen={!!comment} onClose={onClose} title="댓글 수정">
       <div className="mt-4">
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <textarea
@@ -62,10 +62,10 @@ export const EditCommentModal = ({ comment, onClose, onCommentUpdated }: EditCom
       </div>
       <div className="mt-6 flex justify-end space-x-2">
         <Button variant="secondary" onClick={onClose} disabled={isUpdating}>
-          Cancel
+          취소
         </Button>
         <Button onClick={handleUpdate} loading={isUpdating}>
-          Update
+          수정
         </Button>
       </div>
     </Modal>

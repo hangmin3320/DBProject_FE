@@ -52,7 +52,7 @@ export default function SignInPageClient() {
       router.push('/');
       router.refresh(); // Refresh to update the UI based on auth status
     } catch (err) {
-      setError('Invalid email or password');
+      setError('이메일 또는 비밀번호가 올바르지 않습니다.');
       console.error('Login error:', err);
     }
   };
@@ -62,7 +62,7 @@ export default function SignInPageClient() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            로그인
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -79,7 +79,7 @@ export default function SignInPageClient() {
                 type="email"
                 autoComplete="email"
                 required
-                label="Email address"
+                label="이메일 주소"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -91,7 +91,7 @@ export default function SignInPageClient() {
                 type="password"
                 autoComplete="current-password"
                 required
-                label="Password"
+                label="비밀번호"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -101,7 +101,7 @@ export default function SignInPageClient() {
           <div className="flex items-center justify-between">
             <div className="text-sm">
               <Link href="/auth/signup" className="font-medium text-blue-600 hover:text-blue-500">
-                Don't have an account? Sign up
+                계정이 없으신가요? 가입하기
               </Link>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function SignInPageClient() {
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Sign in
+              로그인
             </Button>
           </div>
         </form>

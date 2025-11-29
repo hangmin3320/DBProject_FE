@@ -43,7 +43,7 @@ export default function HomePageClient() {
       // Change the key of PostsList to trigger a re-fetch
       setPostListKey(Date.now());
     } catch (err) {
-      setError('Failed to create post. Please try again.');
+      setError('게시물 작성에 실패했습니다. 다시 시도해주세요.');
       console.error('Create post error:', err);
     } finally {
       setIsCreating(false);
@@ -126,7 +126,7 @@ export default function HomePageClient() {
                   className="text-blue-600 hover:text-blue-800"
                   disabled={isCreating}
                 >
-                  📷 {files.length > 0 ? `${files.length} file(s) selected` : '이미지 첨부'}
+                  📷 {files.length > 0 ? `파일 ${files.length}개 선택됨` : '이미지 첨부'}
                 </button>
               </div>
               <Button onClick={handleCreatePost} loading={isCreating}>게시</Button>
