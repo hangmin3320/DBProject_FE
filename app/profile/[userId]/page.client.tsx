@@ -7,7 +7,7 @@ import PostsList from '../../_components/domain/PostsList';
 import { FollowButton } from '../../_components/domain/FollowButton';
 import { Avatar } from '../../_components/ui/Avatar';
 import { Button } from '../../_components/ui/Button';
-import { UserListModal } from '../../_components/domain/UserListModal';
+import { UserListModal } from '@/app/_components/domain/UserListModal';
 import { User } from '../../types/user';
 import { userApi } from '../../_lib/api';
 import { useAuthStore } from '../../_store/auth';
