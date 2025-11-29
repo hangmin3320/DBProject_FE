@@ -28,7 +28,7 @@ export const UserListModal = ({ isOpen, onClose, title, users, loading }: UserLi
         ) : users.length > 0 ? (
           <ul className="divide-y divide-gray-200">
             {users.map((user) => (
-              <li key={user.user_id} className="py-3 flex items-center justify-between">
+              <li key={user.user_id} className="py-2 flex items-center justify-between">
                 <Link href={`/profile/${user.user_id}`} onClick={onClose} className="flex items-center space-x-3">
                   <Avatar src="" fallback={user.username.charAt(0).toUpperCase()} size="md" />
                   <span className="font-medium text-gray-800">{user.username}</span>
